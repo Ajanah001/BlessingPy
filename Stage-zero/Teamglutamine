@@ -1,0 +1,11 @@
+print("Hello, World! Welcome to Hackbio")
+print("This is Team glutamine and below are the details of our group members using python programming language")
+Student_info = Data frame({"Name":["Ajanah Blessing","Adedeji Jesulayomi","Ajayi-Segun Flourish"],
+"Slack_username":["Ajanah","Jesulayomi","Titobliss"],
+"Email":["ajanahblessing@gmail.com","adedejitolu724@gmail.com","fluorishajayisegun@gmail.com"],
+"Hobby":["Listening to music, learning new things","Watching educative content","Listening to music, writing, and reading"]
+"Country"["Nigeria","Nigeria","Nigeria"],
+"Discipline"["Cell Biology and Genetics","Cell Biology and Genetics","Cell Biology and Genetics"],
+"Preferred_programming_language":["python","python","python"]})
+print (Student_info)
+
