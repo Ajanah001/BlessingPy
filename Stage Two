@@ -1,1 +1,178 @@
 
+
+Open In Colab
+
+import pandas as pd
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+df = pd.read_table("https://raw.githubusercontent.com/HackBio-Internship/2025_project_collection/refs/heads/main/Python/Dataset/mcgc.tsv", sep ="\t")
+
+
+##Strain1_Rep1
+# Select only the column you want
+column_name = ["A1","A2", "B1","B2","C1","C2"]  # Replace with the actual column name
+df_selected = df[column_name]
+
+# Since pairplot requires at least two variables, you may need to include another column
+#sns.pairplot(df, vars=[column_name], hue="time", diag_kind="line", x_vars=["time"], y_vars=[column_name]) - first trial
+# Otherwise, consider using a different visualization like a histogram or scatter plot
+#using sns.lineplot
+
+plt.figure() #Create a new figure for the plot
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label=column)
+plt.title('Strain1_Rep1 Wild-type vs. Knockout Growth Curve') #Set the title of the plot
+plt.xlabel('Time') #Set the y-axis label
+plt.ylabel('OD600') #Set the y-axis label
+plt.legend() #Show the legend
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain1_Rep1	A1	A2	B1	B2	C1	C2
+
+
+##Strain1_Rep2
+column_name = ["A3",	"A4","B3",	"B4",	"C3",	"C4"]
+df_selected = df[column_name]
+plt.figure()
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label=column)
+plt.title('Strain1_Rep2 Wild-type vs. Knockout Growth Curve')
+plt.xlabel('Time')
+plt.ylabel('OD600')
+plt.legend()
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain1_Rep2	A3	A4	B3	B4	C3	C4
+
+
+##Strain2_Rep1
+column_name = ["A5",	"A6",	"B5",	"B6",	"C5",	"C6"]
+df_selected = df[column_name]
+plt.figure()
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label=column)
+plt.title('Strain2_Rep1 Wild-type vs. Knockout Growth Curve')
+plt.xlabel('Time')
+plt.ylabel('OD600')
+plt.legend()
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain2_Rep1	A5	A6	B5	B6	C5	C6
+
+
+##Strain2_Rep2
+column_name = ["A7",	"A8",	"B7",	"B8",	"C7",	"C8"]
+df_selected = df[column_name]
+plt.figure()
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label=column)
+plt.title('Strain2_Rep2 Wild-type vs. Knockout Growth Curve')
+plt.xlabel('Time')
+plt.ylabel('OD600')
+plt.legend()
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain2_Rep2	A7	A8	B7	B8	C7	C8
+
+
+##Strain3_Rep1
+column_name = ["A9",	"A10",	"B9",	"B10",	"C9",	"C10"]
+df_selected = df[column_name]
+plt.figure()
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label=column)
+plt.title('Strain3_Rep1 Wild-type vs. Knockout Growth Curve')
+plt.xlabel('Time')
+plt.ylabel('OD600')
+plt.legend()
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain3_Rep1	A9	A10	B9	B10	C9	C10
+
+
+##Strain3_Rep2
+column_name = ["A11",	"A12",	"B11",	"B12",	"C11",	"C12"]
+df_selected = df[column_name]
+plt.figure()
+label_lines = { "A12": "+", "B12": "+", "C12": "+",
+            "A11": "_", "B11": "_", "C11": "_" }
+for column in column_name:
+    sns.lineplot(data=df, x="time", y=column, label =column)
+x_last = df["time"].iloc[-1]
+y_last = df[column].iloc[-1]
+
+# Annotate with labels at the end of the lines
+plt.text(x_last, y_last, label_lines[column], fontsize=12, verticalalignment="bottom", fontweight="bold")
+plt.title('Strain3_Rep2 Wild-type vs. Knockout Growth Curve')
+plt.xlabel('Time')
+plt.ylabel('OD600')
+plt.legend()
+
+#Strain	      WT	MUT	WT	MUT	WT	MUT
+#Strain3_Rep2	A11	A12	B11	B12	C11	C12
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import scipy.stats as stats
+
+# Load dataset
+url = "https://raw.githubusercontent.com/HackBio-Internship/2025_project_collection/refs/heads/main/Python/Dataset/mcgc.tsv"
+df = pd.read_csv(url, sep="\t")
+
+# Extract time and growth data for knock-out (-) and knock-in (+) strains
+time = df['time']
+knock_out_growth = df[['A1','A3','A5','A7','A9','A11','B1','B3','B5','B7','B9','B11', 'C1','C3','C5','C7','C9','C11']]
+knock_in_growth = df[['A2','A4','A6','A8','A10','A12','B2','B4','B6','B8','B10','B12', 'C2','C4','C6','C8','C10','C12']]
+
+# Determine carrying capacity time (time to reach 95% of max value)
+def get_carrying_capacity_time(growth_data, time):
+    max_val = np.max(growth_data)
+    carrying_capacity_time = time[np.where(growth_data >= 0.95 * max_val)[0][0]]
+    return carrying_capacity_time
+
+carrying_capacity_knock_out = get_carrying_capacity_time(knock_out_growth, time)
+carrying_capacity_knock_in = get_carrying_capacity_time(knock_in_growth, time)
+
+# Plot growth curves overlaid
+plt.figure(figsize=(8, 5))
+plt.plot(time, knock_out_growth, label="Knock-out (-)", linestyle="--", color="red")
+plt.plot(time, knock_in_growth, label="Knock-in (+)", linestyle="-", color="blue")
+plt.axhline(0.95 * knock_out_growth.max().max(), color='gray', linestyle=':')
+plt.xlabel("Time")
+plt.ylabel("Growth")
+plt.legend()
+plt.title("Growth Curves of Knock-out and Knock-in Strains")
+plt.show()
+
+# Scatter plot of carrying capacity times
+plt.figure(figsize=(6, 4))
+plt.scatter(["Knock-out (-)", "Knock-in (+)"], [carrying_capacity_knock_out, carrying_capacity_knock_in], color=['red', 'blue'])
+plt.ylabel("Time to Carrying Capacity")
+plt.title("Scatter Plot of Time to Carrying Capacity")
+plt.show()
+
+# Box plot of carrying capacity times
+plt.figure(figsize=(6, 4))
+plt.boxplot([[carrying_capacity_knock_out], [carrying_capacity_knock_in]], labels=["Knock-out (-)", "Knock-in (+)"])
+plt.ylabel("Time to Carrying Capacity")
+plt.title("Box Plot of Time to Carrying Capacity")
+plt.show()
+
+# Statistical test: Compare time to carrying capacity
+t_stat, p_value = stats.ttest_ind([carrying_capacity_knock_out], [carrying_capacity_knock_in])
+
+# Interpretation of results
+if p_value < 0.05:
+    print("There is a statistically significant difference in the time to reach carrying capacity between knock-out and knock-in strains.")
+else:
+    print("There is no statistically significant difference in the time to reach carrying capacity between knock-out and knock-in strains.")
+print(carrying_capacity_knock_out)
+print(carrying_capacity_knock_in)
+
+# Comments explaining observations
+
+     
+
